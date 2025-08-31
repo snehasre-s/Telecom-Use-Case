@@ -12,6 +12,9 @@ public class Subscription {
     private boolean mnpPending;
     private MNPStatus mnpStatus;
 
+    public Subscription() {
+    }
+
     public Subscription(int subscriptionId, int customerId, int planId,
                         String familyId, LocalDate startDate, LocalDate endDate,
                         boolean mnpPending) {
