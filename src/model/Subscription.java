@@ -10,6 +10,7 @@ public class Subscription {
     private LocalDate startDate;
     private LocalDate endDate;
     private boolean mnpPending;
+    private MNPStatus mnpStatus;
 
     public Subscription(int subscriptionId, int customerId, int planId,
                         String familyId, LocalDate startDate, LocalDate endDate,
@@ -30,6 +31,42 @@ public class Subscription {
     public LocalDate getStartDate() { return startDate; }
     public LocalDate getEndDate() { return endDate; }
     public boolean isMnpPending() { return mnpPending; }
+
+    public void setSubscriptionId(int subscriptionId) {
+        this.subscriptionId = subscriptionId;
+    }
+
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
+    }
+
+    public void setPlanId(int planId) {
+        this.planId = planId;
+    }
+
+    public MNPStatus getMnpStatus() {
+        return mnpStatus;
+    }
+
+    public void setMnpStatus(MNPStatus mnpStatus) {
+        this.mnpStatus = mnpStatus;
+    }
+
+    public void setFamilyId(String familyId) {
+        this.familyId = familyId;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public void setMnpPending(boolean mnpPending) {
+        this.mnpPending = mnpPending;
+    }
 
     @Override
     public String toString() {
