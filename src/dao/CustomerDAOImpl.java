@@ -10,15 +10,15 @@ public class CustomerDAOImpl implements CustomerDAO {
 
     private List<Customer> customers;
 
-    // Constructor loads seeded customers once
     public CustomerDAOImpl() {
-        // This ensures DAO works with the same list as CustomerSeeder
         this.customers = CustomerSeeder.seedCustomers();
     }
 
     @Override
     public void registerCustomer(Customer customer) {
+
         customers.add(customer);
+
     }
 
     @Override
@@ -28,11 +28,9 @@ public class CustomerDAOImpl implements CustomerDAO {
 
     @Override
     public Invoice displayInvoice(int customerId) {
-        // Delegate invoice generation to InvoiceDAOImpl
         InvoiceDAO invoiceDAO = new InvoiceDAOImpl();
         return invoiceDAO.displayInvoice(customerId);
     }
-
 
     @Override
     public void addUsage(int customerId, double data, int voice, int sms) {

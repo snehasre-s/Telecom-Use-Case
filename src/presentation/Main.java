@@ -51,7 +51,7 @@ public class Main {
 
         if (customerMatch != null) {
             System.out.println("Logged in as CUSTOMER: " + customerMatch.getName());
-            showCustomerMenu(scanner, customerMatch, customerService, invoiceService, usageService, subscriptionService);
+            showCustomerMenu(scanner, customerMatch, customerService, invoiceService, usageService, subscriptionService, planService);
             return;
         }
 
@@ -66,12 +66,13 @@ public class Main {
             System.out.println("2. View all plans");
             System.out.println("3. Add a plan");
             System.out.println("4. Update plan");
-            System.out.println("5. Get All Usages");
-            System.out.println("6. View All Subscriptions of a Customer");
-            System.out.println("7. View Subscriptions by Family ID");
-            System.out.println("8. Update a Subscription");
-            System.out.println("9. Analytics Reports");
-            System.out.println("10. Exit admin menu");
+            System.out.println("5. Delete a plan");
+            System.out.println("6. Get All Usages");
+            System.out.println("7. View All Subscriptions of a Customer");
+            System.out.println("8. View Subscriptions by Family ID");
+            System.out.println("9. Update a Subscription");
+            System.out.println("10. Analytics Reports");
+            System.out.println("11. Exit admin menu");
             System.out.print("Choose an option: ");
 
             String input = scanner.nextLine().trim();
@@ -153,7 +154,7 @@ public class Main {
                         );
                         ps.addPlan(newPlan);
 
-                        System.out.println("✅ Plan added: " + newPlan.getName());
+                        System.out.println("Plan added: " + newPlan.getName());
                         break;
 
                     case "4":
@@ -181,6 +182,11 @@ public class Main {
                         System.out.println("Plan updated successfully.");
                         break;
                     case "5":
+                        System.out.print("Enter Plan ID to delete: ");
+                        int planIdToDelete = scanner.nextInt();
+                        ps.deletePlan(planIdToDelete);
+                        System.out.println("Plan with ID " + planIdToDelete + " deleted successfully.");
+                    case "6":
                         try{
                             System.out.print("Enter customer ID: ");
                             int custId = scanner.nextInt();
@@ -189,7 +195,7 @@ public class Main {
                         } catch (SubscriptionNotFoundException e) {
                             System.out.println(e.getMessage());
                         }
-                    case "6":
+                    case "7":
                         System.out.print("Enter family ID: ");
                         String famId = scanner.nextLine();
                         try {
@@ -199,7 +205,7 @@ public class Main {
                             System.out.println(e.getMessage());
                         }
                         break;
-                    case "7":
+                    case "8":
                         System.out.print("Enter subscription ID to update: ");
                         int subId = scanner.nextInt();
                         scanner.nextLine();
@@ -219,17 +225,17 @@ public class Main {
                             System.out.println(e.getMessage());
                         }
                         break;
-                    case "8":
+                    case "9":
                         List<Usage> allUsages = us.getAllUsages();
                         System.out.println("--- All Usages ---");
                         allUsages.forEach(System.out::println);
                         break;
 
-                    case "9":
+                    case "10":
                         analyticsMenu(scanner,as);
                         break;
 
-                    case "10":
+                    case "11":
                         return;
 
                     default:
@@ -291,15 +297,17 @@ public class Main {
             }
         }
     }
-    private static void showCustomerMenu(Scanner scanner, Customer customerMatch, CustomerService cs, InvoiceService is, UsageService us, SubscriptionService ss) {
+    private static void showCustomerMenu(Scanner scanner, Customer customerMatch, CustomerService cs, InvoiceService is, UsageService us, SubscriptionService ss, PlanService ps) {
         while (true) {
             System.out.println("\n--- Customer Menu ---");
             System.out.println("1. Register new customer");
             System.out.println("2. View your invoice");
             System.out.println("3. Update your details");
             System.out.println("4. View your usage");
-            System.out.println("5. View your subscriptions");
-            System.out.println("6. Exit customer menu");
+            System.out.println("5. Add usage");
+            System.out.println("6. View your subscriptions");
+            System.out.println("7. View all plans");
+            System.out.println("8. Exit customer menu");
             System.out.print("Choose an option: ");
 
             String input = scanner.nextLine().trim();
@@ -370,15 +378,44 @@ public class Main {
                         }
                         break;
                     case "5":
+                        System.out.print("Enter Customer ID: ");
+                        int custId = scanner.nextInt();
+
+                        System.out.print("Enter Data used (GB): ");
+                        double data = scanner.nextDouble();
+
+                        System.out.print("Enter Voice Minutes used: ");
+                        int voice = scanner.nextInt();
+
+                        System.out.print("Enter SMS count: ");
+                        int sms = scanner.nextInt();
+
+                        try {
+                            cs.addUsage(custId, data, voice, sms);
+                            System.out.println("Usage added for Customer ID " + custId);
+                        } catch (Exception e) {
+                            System.out.println("Error while adding usage: " + e.getMessage());
+                        }
+                        break;
+
+                    case "6":
                         try{
                         List<Subscription> subs = ss.fetchSubscriptionsByCustomer(customerMatch.getCustomerId());
                         subs.forEach(System.out::println);
                         } catch (SubscriptionNotFoundException e) {
                             System.out.println(e.getMessage());
                         }
-                break;
+                        break;
+                    case "7":
+                        List<Plan> plans = ps.viewAllPlans();
+                        if (plans.isEmpty()) {
+                            System.out.println("No plans available.");
+                        } else {
+                            plans.forEach(System.out::println);
+                        }
+                        break;
 
-                    case "6":
+                    case "8":
                         return;
 
                     default:
