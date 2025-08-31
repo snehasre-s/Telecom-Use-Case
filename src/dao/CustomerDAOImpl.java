@@ -28,9 +28,11 @@ public class CustomerDAOImpl implements CustomerDAO {
 
     @Override
     public Invoice displayInvoice(int customerId) {
-        // to be implemented
-        return null;
+        // Delegate invoice generation to InvoiceDAOImpl
+        InvoiceDAO invoiceDAO = new InvoiceDAOImpl();
+        return invoiceDAO.displayInvoice(customerId);
     }
+
 
     @Override
     public void addUsage(int customerId, double data, int voice, int sms) {
