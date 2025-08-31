@@ -1,6 +1,8 @@
 package services;
 
 
+import model.Customer;
+import model.Invoice;
 import model.Plan;
 import java.util.List;
 
