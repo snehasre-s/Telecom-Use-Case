@@ -44,14 +44,6 @@ public class Subscription {
         this.planId = planId;
     }
 
-    public MNPStatus getMnpStatus() {
-        return mnpStatus;
-    }
-
-    public void setMnpStatus(MNPStatus mnpStatus) {
-        this.mnpStatus = mnpStatus;
-    }
-
     public void setFamilyId(String familyId) {
         this.familyId = familyId;
     }
