@@ -16,7 +16,9 @@ public interface AdminDAO {
 
     List<Plan> viewAllPlans();
 
-    void updatePlan(int planId, Plan updatedPlan);
+    Plan updatePlan(int planId, Plan updatedPlan);
+
+    Plan addNewPlan(Plan plan);
 
     Map<String, Double> generateAnalyticsReport();
 }

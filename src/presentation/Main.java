@@ -4,10 +4,12 @@ import exceptions.SubscriptionNotFoundException;
 import model.*;
 import repo.AdminSeeder;
 import repo.CustomerSeeder;
+import repo.PlanSeeder;
 import services.*;
 
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collector;
 
 public class Main {
 
@@ -39,7 +41,8 @@ public class Main {
 
         if (adminMatch != null) {
             System.out.println("Logged in as ADMIN");
-            showAdminMenu(scanner, customerService, planService, subscriptionService, analyticsService, usageService);
+            AdminService adminServiceObj = new AdminServiceImpl();
+            showAdminMenu(scanner, customerService, planService, subscriptionService, analyticsService, usageService, adminServiceObj);
             return;
         }
 
@@ -59,7 +62,7 @@ public class Main {
         System.out.println("Invalid credentials. Login failed!");
     }
 
-    private static void showAdminMenu(Scanner scanner, CustomerService cs, PlanService ps, SubscriptionService ss, AnalyticsService as, UsageService us) {
+    private static void showAdminMenu(Scanner scanner, CustomerService cs, PlanService ps, SubscriptionService ss, AnalyticsService as, UsageService us, AdminService adminServiceObj) {
         while (true) {
             System.out.println("\n--- Admin Menu ---");
             System.out.println("1. View all customers");
@@ -79,7 +82,7 @@ public class Main {
             try {
                 switch (input) {
                     case "1":
-                        List<Customer> customers = cs.listAllCustomers();
+                        List<Customer> customers = adminServiceObj.viewAllCustomers();
                         if (customers.isEmpty()) {
                             System.out.println("No customers found.");
                         } else {
@@ -88,7 +91,7 @@ public class Main {
                         break;
 
                     case "2":
-                        List<Plan> plans = ps.viewAllPlans();
+                        List<Plan> plans = adminServiceObj.viewAllPlans();
                         if (plans.isEmpty()) {
                             System.out.println("No plans available.");
                         } else {
@@ -97,62 +100,45 @@ public class Main {
                         break;
                     case "3":
                         System.out.println("--- Add New Plan ---");
-
                         System.out.print("Enter Plan ID: ");
                         int id = scanner.nextInt();
                         scanner.nextLine();
-
                         System.out.print("Enter Plan Name: ");
                         String planName = scanner.nextLine();
-
                         System.out.print("Enter Monthly Rental: ");
                         double monthlyRental = scanner.nextDouble();
-
                         System.out.print("Enter Data Allowance (GB): ");
                         double dataAllowanceGb = scanner.nextDouble();
-
                         System.out.print("Enter Voice Allowance (Minutes): ");
                         int voiceAllowanceMin = scanner.nextInt();
-
                         System.out.print("Enter SMS Allowance: ");
                         int smsAllowance = scanner.nextInt();
-
                         System.out.print("Enter Data Overage Rate (₹/GB): ");
                         double dataOverageRate = scanner.nextDouble();
-
                         System.out.print("Enter Voice Overage Rate (₹/Min): ");
                         double voiceOverageRate = scanner.nextDouble();
-
                         System.out.print("Enter SMS Overage Rate (₹/SMS): ");
                         double smsOverageRate = scanner.nextDouble();
-
                         System.out.print("Enter FUP Limit (GB): ");
                         double fupLimitGb = scanner.nextDouble();
-
                         System.out.print("Is Rollover Enabled? (true/false): ");
                         boolean rolloverEnabled = scanner.nextBoolean();
-
                         System.out.print("Enter Roaming Charge per GB: ");
                         double roamingChargePerGb = scanner.nextDouble();
-
                         System.out.print("Enter Roaming Charge per Min: ");
                         double roamingChargePerMin = scanner.nextDouble();
-
                         System.out.print("Is Family Shared Plan? (true/false): ");
                         boolean familyShared = scanner.nextBoolean();
-
                         double familyDataPoolGb = 0.0;
                         if (familyShared) {
                             System.out.print("Enter Family Data Pool (GB): ");
                             familyDataPoolGb = scanner.nextDouble();
                         }
-
                         System.out.print("Weekend Free Voice? (true/false): ");
                         boolean weekendFreeVoice = scanner.nextBoolean();
-
                         Plan newPlan = new Plan(id, planName, monthlyRental, dataAllowanceGb, voiceAllowanceMin, smsAllowance, dataOverageRate, voiceOverageRate, smsOverageRate, fupLimitGb, rolloverEnabled, roamingChargePerGb, roamingChargePerMin, familyShared, familyDataPoolGb, weekendFreeVoice
                         );
-                        ps.addPlan(newPlan);
+                        adminServiceObj.addNewPlan(newPlan);
 
                         System.out.println("Plan added: " + newPlan.getName());
                         break;
@@ -160,25 +146,24 @@ public class Main {
                     case "4":
                         System.out.print("Enter Plan ID to update: ");
                         int planId = Integer.parseInt(scanner.nextLine().trim());
-
-                        Plan existingPlan = ps.getPlanById(planId);
+                        List<Plan> repoPlans = PlanSeeder.seedPlans();
+                        Plan existingPlan = repoPlans.stream()
+                                .filter(p->p.getId()==planId)
+                                .findFirst()
+                                .orElse(null);
                         if (existingPlan == null) {
                             System.out.println("Invalid Plan ID!");
                             break;
                         }
-
                         System.out.print("New Plan Name (currently: " + existingPlan.getName() + "): ");
                         String name = scanner.nextLine().trim();
                         if (name.isEmpty()) name = existingPlan.getName();
-
                         System.out.print("New Monthly Rental (currently: " + existingPlan.getMonthlyRental() + "): ");
                         String rentalStr = scanner.nextLine().trim();
                         double rental = rentalStr.isEmpty() ? existingPlan.getMonthlyRental() : Double.parseDouble(rentalStr);
-
                         existingPlan.setName(name);
                         existingPlan.setMonthlyRental(rental);
-
-                        ps.updatePlan(planId, existingPlan);
+                        adminServiceObj.updatePlan(planId, existingPlan);
                         System.out.println("Plan updated successfully.");
                         break;
                     case "5":

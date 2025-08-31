@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlanSeeder {
+    static public List<Plan> plans = new ArrayList<>();
 
     public static List<Plan> seedPlans() {
-        List<Plan> plans = new ArrayList<>();
 
         plans.add(new Plan(
                 1,
