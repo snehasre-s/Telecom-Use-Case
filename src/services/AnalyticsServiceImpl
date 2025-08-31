@@ -74,10 +74,10 @@ public class AnalyticsServiceImpl implements AnalyticsService {
     public void recommendPlans() {
         System.out.println("\nPlan Recommendations based on overages:");
 
-        // 1️⃣ Load all plans
+        // Load all plans
         List<Plan> plans = PlanSeeder.seedPlans();
 
-        // 2️⃣ Group invoices by customer to get average overage
+        // Group invoices by customer to get average overage
         Map<Integer, Double> avgOverageByCustomer = Invoices.getInvoices().stream()
                 .collect(Collectors.groupingBy(
                         Invoice::getCustomerId,
