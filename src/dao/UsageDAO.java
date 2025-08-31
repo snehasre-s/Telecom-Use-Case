@@ -2,6 +2,7 @@ package dao;
 
 import model.Usage;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface UsageDAO {
@@ -9,5 +10,5 @@ public interface UsageDAO {
 
     List<Usage> getAllUsages();
 
-    void addUsage(int customerId, double data, int voice, int sms);
+    String addUsage(int subscriptionId, double dataGb, int voiceMinutes, int smsCount, boolean roaming, boolean international, LocalDateTime usageTime);
 }
