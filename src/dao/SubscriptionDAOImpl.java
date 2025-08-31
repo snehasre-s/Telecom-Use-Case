@@ -27,13 +27,13 @@ public class SubscriptionDAOImpl implements SubscriptionDAO {
 
     @Override
     public List<Subscription> getSubscriptionsByCustomer(int customerId) {
-        List<Subscription> list = subscriptions.stream()
+        List<Subscription> slist = subscriptions.stream()
                 .filter(s -> s.getCustomerId() == customerId)
                 .collect(Collectors.toList());
-        if (list.isEmpty()) {
+        if (slist.isEmpty()) {
             throw new SubscriptionNotFoundException("No subscriptions found for customer: " + customerId);
         }
-        return list;
+        return slist;
     }
 
     @Override
