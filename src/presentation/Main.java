@@ -1,10 +1,9 @@
 package presentation;
 
+import exceptions.SubscriptionNotFoundException;
 import model.*;
 import repo.AdminSeeder;
 import repo.CustomerSeeder;
-import repo.PlanSeeder;
-import repo.UsageSeeder;
 import services.*;
 
 import java.util.List;
@@ -39,8 +38,8 @@ public class Main {
                 .orElse(null);
 
         if (adminMatch != null) {
-            System.out.println("✅ Logged in as ADMIN");
-            showAdminMenu(scanner, customerService, planService, subscriptionService, analyticsService);
+            System.out.println("Logged in as ADMIN");
+            showAdminMenu(scanner, customerService, planService, subscriptionService, analyticsService, usageService);
             return;
         }
 
@@ -51,24 +50,28 @@ public class Main {
                 .orElse(null);
 
         if (customerMatch != null) {
-            System.out.println("✅ Logged in as CUSTOMER: " + customerMatch.getName());
-            showCustomerMenu(scanner, customerService, invoiceService);
+            System.out.println("Logged in as CUSTOMER: " + customerMatch.getName());
+            showCustomerMenu(scanner, customerMatch, customerService, invoiceService, usageService, subscriptionService);
             return;
         }
 
         // 3. If nothing matched
-        System.out.println("❌ Invalid credentials. Login failed!");
+        System.out.println("Invalid credentials. Login failed!");
     }
 
-    private static void showAdminMenu(Scanner scanner, CustomerService cs, PlanService ps, SubscriptionService ss, AnalyticsService as) {
+    private static void showAdminMenu(Scanner scanner, CustomerService cs, PlanService ps, SubscriptionService ss, AnalyticsService as, UsageService us) {
         while (true) {
             System.out.println("\n--- Admin Menu ---");
             System.out.println("1. View all customers");
             System.out.println("2. View all plans");
             System.out.println("3. Add a plan");
             System.out.println("4. Update plan");
-            System.out.println("5. Analytics Reports");
-            System.out.println("6. Exit admin menu");
+            System.out.println("5. Get All Usages");
+            System.out.println("6. View All Subscriptions of a Customer");
+            System.out.println("7. View Subscriptions by Family ID");
+            System.out.println("8. Update a Subscription");
+            System.out.println("9. Analytics Reports");
+            System.out.println("10. Exit admin menu");
             System.out.print("Choose an option: ");
 
             String input = scanner.nextLine().trim();
@@ -177,12 +180,56 @@ public class Main {
                         ps.updatePlan(planId, existingPlan);
                         System.out.println("Plan updated successfully.");
                         break;
-
                     case "5":
+                        try{
+                            System.out.print("Enter customer ID: ");
+                            int custId = scanner.nextInt();
+                            List<Subscription> subs = ss.fetchSubscriptionsByCustomer(custId);
+                            subs.forEach(System.out::println);
+                        } catch (SubscriptionNotFoundException e) {
+                            System.out.println(e.getMessage());
+                        }
+                    case "6":
+                        System.out.print("Enter family ID: ");
+                        String famId = scanner.nextLine();
+                        try {
+                            List<Subscription> famSubs = ss.fetchSubscriptionsByFamily(famId);
+                            famSubs.forEach(System.out::println);
+                        } catch (SubscriptionNotFoundException e) {
+                            System.out.println(e.getMessage());
+                        }
+                        break;
+                    case "7":
+                        System.out.print("Enter subscription ID to update: ");
+                        int subId = scanner.nextInt();
+                        scanner.nextLine();
+
+                        try {
+                            Subscription sub = ss.fetchSubscriptionById(subId);
+                            System.out.println("Current subscription: " + sub);
+
+                            // Example: just update planId here
+                            System.out.print("Enter new Plan ID: ");
+                            int newPlanId = scanner.nextInt();
+                            sub.setPlanId(newPlanId);
+
+                            ss.modifySubscription(sub);
+                            System.out.println("Subscription updated!");
+                        } catch (SubscriptionNotFoundException e) {
+                            System.out.println(e.getMessage());
+                        }
+                        break;
+                    case "8":
+                        List<Usage> allUsages = us.getAllUsages();
+                        System.out.println("--- All Usages ---");
+                        allUsages.forEach(System.out::println);
+                        break;
+
+                    case "9":
                         analyticsMenu(scanner,as);
                         break;
 
-                    case "6":
+                    case "10":
                         return;
 
                     default:
@@ -244,13 +291,15 @@ public class Main {
             }
         }
     }
-    private static void showCustomerMenu(Scanner scanner, CustomerService cs, InvoiceService is) {
+    private static void showCustomerMenu(Scanner scanner, Customer customerMatch, CustomerService cs, InvoiceService is, UsageService us, SubscriptionService ss) {
         while (true) {
             System.out.println("\n--- Customer Menu ---");
             System.out.println("1. Register new customer");
             System.out.println("2. View your invoice");
             System.out.println("3. Update your details");
-            System.out.println("4. Exit customer menu");
+            System.out.println("4. View your usage");
+            System.out.println("5. View your subscriptions");
+            System.out.println("6. Exit customer menu");
             System.out.print("Choose an option: ");
 
             String input = scanner.nextLine().trim();
@@ -285,20 +334,15 @@ public class Main {
                         break;
 
                     case "2":
-                        System.out.print("Enter your Customer ID: ");
-                        int custId = Integer.parseInt(scanner.nextLine().trim());
-                        Invoice invoice = is.displayInvoice(custId);
+                        Invoice invoice = is.displayInvoice(customerMatch.getCustomerId());
                         if (invoice == null) {
-                            System.out.println("No invoice found for given Customer ID.");
+                            System.out.println("No invoice found for your Customer ID.");
                         } else {
                             System.out.println(invoice);
                         }
                         break;
 
                     case "3":
-                        System.out.print("Enter your Customer ID: ");
-                        int updId = Integer.parseInt(scanner.nextLine().trim());
-
                         System.out.print("Field to update (name, phone, email, password): ");
                         String field = scanner.nextLine().trim().toLowerCase();
 
@@ -314,11 +358,27 @@ public class Main {
                             break;
                         }
 
-                        cs.updateCustomerDetails(updId, field, newValue);
+                        cs.updateCustomerDetails(customerMatch.getCustomerId(), field, newValue);
                         System.out.println("Details updated successfully.");
                         break;
-
                     case "4":
+                        Usage u = us.getUsageByCustomerId(customerMatch.getCustomerId());
+                        if (u != null) {
+                            System.out.println("Usage record: " + u);
+                        } else {
+                            System.out.println("No usage found for customer.");
+                        }
+                        break;
+                    case "5":
+                        try{
+                        List<Subscription> subs = ss.fetchSubscriptionsByCustomer(customerMatch.getCustomerId());
+                        subs.forEach(System.out::println);
+                        } catch (SubscriptionNotFoundException e) {
+                            System.out.println(e.getMessage());
+                        }
+                break;
+
+                    case "6":
                         return;
 
                     default:
