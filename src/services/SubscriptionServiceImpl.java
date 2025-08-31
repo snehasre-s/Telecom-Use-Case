@@ -1,17 +1,18 @@
 package services;
 
 import dao.SubscriptionDAO;
+import dao.SubscriptionDAOImpl;
 import exceptions.SubscriptionNotFoundException;
 import model.Subscription;
 
 import java.util.List;
 
-public class SubscriptionServiceImpl implements service.SubscriptionService {
+public class SubscriptionServiceImpl implements SubscriptionService {
 
     private final SubscriptionDAO subscriptionDAO;
 
-    public SubscriptionServiceImpl(SubscriptionDAO subscriptionDAO) {
-        this.subscriptionDAO = subscriptionDAO;
+    public SubscriptionServiceImpl() {
+        this.subscriptionDAO = new SubscriptionDAOImpl();
     }
 
     @Override
