@@ -30,7 +30,7 @@ public class CustomerSeeder {
                     2,
                     "FAMILY001"
             ));
-            customers.get(customers.size() - 1).setOverageCount(3); // Jane had 3 overages
+            customers.get(customers.size() - 1).setOverageCount(3);
 
             customers.add(new Customer(
                     "Amit Sharma",

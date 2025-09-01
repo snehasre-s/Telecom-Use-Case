@@ -17,7 +17,6 @@ public class InvoiceDAOImpl implements InvoiceDAO {
     public List<Invoice> displayInvoice(int customerId) {
         List<Invoice> allInvoice = Invoices.getInvoices().stream().filter(i->i.getCustomerId()==customerId).toList();
         System.out.println("All invoices : ");
-        allInvoice.forEach(System.out::println);
         return allInvoice;
     }
 
@@ -44,9 +43,11 @@ public class InvoiceDAOImpl implements InvoiceDAO {
                 .orElseThrow(() -> new RuntimeException("Plan not found for subscription " + subscription.getSubscriptionId()));
 
         if (plan.isFamilyShared()) {
-            return generateFamilyInvoices(subscription.getFamilyId(), plan, subs, usages, customerId);
+            Invoice genFamInvoice =  generateFamilyInvoices(subscription.getFamilyId(), plan, subs, usages, customerId);
+            return genFamInvoice;
         } else {
-            return generateIndividualInvoice(customer, subscription, plan, usages);
+            Invoice genInvInvoice = generateIndividualInvoice(customer, subscription, plan, usages);
+            return genInvInvoice;
         }
     }
 
@@ -61,7 +62,7 @@ public class InvoiceDAOImpl implements InvoiceDAO {
         double discounts = applyReferralDiscount(c);
         double rolloverCredit = applyRolloverData(p, custUsage);
 
-        //Currently rollover credit is not used, Need to update the implementation
+        //Currently rollover credit is not used
         double total = baseRental + overage + roaming - discounts;
 
         return Invoices.createInvoice(

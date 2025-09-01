@@ -4,6 +4,7 @@ import exceptions.SubscriptionNotFoundException;
 import model.*;
 import repo.AdminSeeder;
 import repo.CustomerSeeder;
+import repo.Invoices;
 import services.*;
 
 import java.sql.SQLOutput;
@@ -346,7 +347,8 @@ public class Main {
             System.out.println("5. Add usage");
             System.out.println("6. View your subscriptions");
             System.out.println("7. View all plans");
-            System.out.println("8. Exit customer menu");
+            System.out.println("8. Generate a Invoice");
+            System.out.println("9. Exit customer menu");
             System.out.print("Choose an option: ");
             Scanner scanner = new Scanner(System.in);
             String input = scanner.nextLine().trim();
@@ -428,8 +430,7 @@ public class Main {
                         break;
 
                     case "5":
-                        System.out.print("Enter Customer ID: ");
-                        int custId = scanner.nextInt();
+                        int custId = customerMatch.getCustomerId();
 
                         System.out.println("Enter Subscription ID:");
                         int subscriptionID=scanner.nextInt();
@@ -448,7 +449,7 @@ public class Main {
 
                         System.out.println("International?(True/False)");
                         boolean international = scanner.nextBoolean();
-
+                        scanner.nextLine();
                         System.out.println("Enter usageTime");
                         LocalDateTime dateTime = null;
                         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -486,8 +487,13 @@ public class Main {
                             plans.forEach(System.out::println);
                         }
                         break;
-
                     case "8":
+                        System.out.println("Generating your invoice");
+                        InvoiceService invoiceServiceObj = new InvoiceServiceImpl();
+                        Invoice generatedInvoice = invoiceServiceObj.generateNewInvoice(customerMatch.getCustomerId());
+                        System.out.println(generatedInvoice);
+                        break;
+                    case "9":
                         return;
 
                     default:
