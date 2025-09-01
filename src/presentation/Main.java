@@ -67,12 +67,13 @@ public class Main {
             System.out.println("3. Add a plan");
             System.out.println("4. Update plan");
             System.out.println("5. Delete a plan");
-            System.out.println("6. Get All Usages");
-            System.out.println("7. View All Subscriptions of a Customer");
-            System.out.println("8. View Subscriptions by Family ID");
-            System.out.println("9. Update a Subscription");
-            System.out.println("10. Analytics Reports");
-            System.out.println("11. Exit admin menu");
+            System.out.println("6. Add a customer");
+            System.out.println("7. Get All Usages");
+            System.out.println("8. View All Subscriptions of a Customer");
+            System.out.println("9. View Subscriptions by Family ID");
+            System.out.println("10. Update a Subscription");
+            System.out.println("11. Analytics Reports");
+            System.out.println("12. Exit admin menu");
             System.out.print("Choose an option: ");
 
             String input = scanner.nextLine().trim();
@@ -187,6 +188,33 @@ public class Main {
                         ps.deletePlan(planIdToDelete);
                         System.out.println("Plan with ID " + planIdToDelete + " deleted successfully.");
                     case "6":
+                        System.out.print("Name: ");
+                        String custname = scanner.nextLine().trim();
+                        if (custname.isEmpty()) throw new IllegalArgumentException("Name cannot be empty.");
+
+                        System.out.print("Phone (10 digits): ");
+                        String phone = scanner.nextLine().trim();
+                        if (!phone.matches("\\d{10}")) throw new IllegalArgumentException("Invalid phone number.");
+
+                        System.out.print("Email: ");
+                        String email = scanner.nextLine().trim();
+                        if (!email.contains("@") || email.length() < 5) throw new IllegalArgumentException("Invalid email.");
+
+                        System.out.print("Referral Status (e.g. REFERRED or blank): ");
+                        String referral = scanner.nextLine().trim();
+
+                        System.out.print("Password: ");
+                        String password = scanner.nextLine().trim();
+                        if (password.length() < 4) throw new IllegalArgumentException("Password too short.");
+
+                        System.out.print("Plan ID: ");
+                        int plaId = Integer.parseInt(scanner.nextLine().trim());
+
+                        Customer newCustomer = new Customer(custname, phone, email, referral, password, plaId, null);
+                        cs.registerCustomer(newCustomer);
+                        System.out.println("Registration successful. Your Customer ID is " + newCustomer.getCustomerId());
+                        break;
+                    case "7":
                         try{
                             System.out.print("Enter customer ID: ");
                             int custId = scanner.nextInt();
@@ -195,7 +223,7 @@ public class Main {
                         } catch (SubscriptionNotFoundException e) {
                             System.out.println(e.getMessage());
                         }
-                    case "7":
+                    case "8":
                         System.out.print("Enter family ID: ");
                         String famId = scanner.nextLine();
                         try {
@@ -205,7 +233,7 @@ public class Main {
                             System.out.println(e.getMessage());
                         }
                         break;
-                    case "8":
+                    case "9":
                         System.out.print("Enter subscription ID to update: ");
                         int subId = scanner.nextInt();
                         scanner.nextLine();
@@ -225,17 +253,17 @@ public class Main {
                             System.out.println(e.getMessage());
                         }
                         break;
-                    case "9":
+                    case "10":
                         List<Usage> allUsages = us.getAllUsages();
                         System.out.println("--- All Usages ---");
                         allUsages.forEach(System.out::println);
                         break;
 
-                    case "10":
+                    case "11":
                         analyticsMenu(scanner,as);
                         break;
 
-                    case "11":
+                    case "12":
                         return;
 
                     default:
@@ -342,11 +370,11 @@ public class Main {
                         break;
 
                     case "2":
-                        Invoice invoice = is.displayInvoice(customerMatch.getCustomerId());
-                        if (invoice == null) {
+                         List<Invoice> allInvoices = is.displayInvoice(customerMatch.getCustomerId());
+                        if (allInvoices.size() == 0) {
                             System.out.println("No invoice found for your Customer ID.");
                         } else {
-                            System.out.println(invoice);
+                            allInvoices.forEach(System.out::println);
                         }
                         break;
 

@@ -11,7 +11,7 @@ public class Customer {
     int plan_id;
     String family_id;
 
-    private int overageCount; // for recommendation of better plan
+    private int overageCount;
 
     public Customer() {
     }
