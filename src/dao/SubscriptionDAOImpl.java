@@ -5,10 +5,11 @@ import model.Subscription;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import repo.SubscriptionSeeder;
 
 public class SubscriptionDAOImpl implements SubscriptionDAO {
+    private final List<Subscription> subscriptions = new ArrayList<>(SubscriptionSeeder.seedSubscriptions());
 
-    private final List<Subscription> subscriptions = new ArrayList<>();
     private int lastId = 0;
 
     @Override
