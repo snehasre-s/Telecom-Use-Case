@@ -10,7 +10,7 @@ import java.util.List;
 public class UsageServiceImpl implements UsageService{
     UsageDAO usageDAO=new UsageDAOImpl();
     @Override
-    public Usage getUsageByCustomerId(int customerId) {
+    public List<Usage> getUsageByCustomerId(int customerId) {
         return usageDAO.getUsageByCustomerId(customerId);
     }
 

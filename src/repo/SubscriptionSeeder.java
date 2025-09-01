@@ -8,9 +8,8 @@ import java.util.List;
 public class SubscriptionSeeder {
 
     private static int lastId = 0;  // keeps track of the last assigned subscriptionId
-
+        public  static List<Subscription> subscriptions = new ArrayList<>();
     public static List<Subscription> seedSubscriptions() {
-        List<Subscription> subscriptions = new ArrayList<>();
 
         subscriptions.add(new Subscription(
                 ++lastId,
@@ -43,5 +42,18 @@ public class SubscriptionSeeder {
         ));
 
         return subscriptions;
+    }
+    public static void addNewSubscription(int custId, int planId, String ffamId, LocalDate start, LocalDate end, boolean mnpStatus){
+        subscriptions.add(
+                new Subscription(
+                ++lastId,
+                custId,
+                planId,
+                ffamId,
+                start,
+                end,
+                mnpStatus
+                )
+        );
     }
 }

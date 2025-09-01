@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface UsageDAO {
-    Usage getUsageByCustomerId(int customerId);
+    List<Usage> getUsageByCustomerId(int customerId);
 
     List<Usage> getAllUsages();
 

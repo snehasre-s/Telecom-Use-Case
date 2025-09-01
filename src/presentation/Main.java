@@ -10,6 +10,8 @@ import java.sql.SQLOutput;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -30,7 +32,7 @@ public class Main {
         AnalyticsService analyticsService = new AnalyticsServiceImpl();
 
         System.out.println("==== Welcome ====");
-        System.out.print("Enter phone/email: ");
+        System.out.print("Enter phone: ");
         String username = scanner.nextLine();
 
         System.out.print("Enter password: ");
@@ -402,12 +404,21 @@ public class Main {
                         System.out.println("Details updated successfully.");
                         break;
                     case "4":
-                        Usage u = us.getUsageByCustomerId(customerMatch.getCustomerId());
-                        if (u != null) {
-                            System.out.println("Usage record: " + u);
-                        } else {
-                            System.out.println("No usage found for customer.");
+                        try{
+                            List<Usage> u = us.getUsageByCustomerId(customerMatch.getCustomerId());
+                            if (u != null) {
+                                for(Usage usage:u){
+                                    System.out.println(usage);
+                                }
+                            } else {
+                                System.out.println("No usage found for customer.");
+                            }
                         }
+                        catch (RuntimeException e) {
+                            System.out.println(e.getMessage());
+                            System.out.println("dsfgsd");
+                        }
+
                         break;
                     case "5":
 
@@ -434,21 +445,19 @@ public class Main {
                         boolean international = scanner.nextBoolean();
 
                         System.out.println("Enter usageTime");
-                        scanner.nextLine();
-                        System.out.print("Enter date (yyyy-MM-dd): ");
-                        String dateInput = scanner.nextLine();
-                        LocalDate date = LocalDate.parse(dateInput);
-
-                        System.out.print("Enter time (HH:mm:ss): ");
-                        String timeInput = scanner.nextLine();
-                        LocalTime time = LocalTime.parse(timeInput);
-                        LocalDateTime usageTime = LocalDateTime.of(date, time);
-
-
-
-
+                        LocalDateTime dateTime = null;
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+                        while (dateTime == null) {
+                            try {
+                                System.out.print("Enter date and time (yyyy-MM-dd HH:mm): ");
+                                String in = scanner.nextLine();
+                                dateTime = LocalDateTime.parse(in, formatter);
+                            } catch (DateTimeParseException e) {
+                                System.out.println("Invalid format! Please enter again.");
+                            }
+                        }
                         try {
-                            us.addUsage(custId,subscriptionID,data, voice, sms,roaming,international,usageTime);
+                            us.addUsage(custId,subscriptionID,data, voice, sms,roaming,international,dateTime);
                             System.out.println("Usage added for Customer ID " + custId);
                         } catch (Exception e) {
                             System.out.println("Error while adding usage: " + e.getMessage());

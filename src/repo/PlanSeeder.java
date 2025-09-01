@@ -11,7 +11,7 @@ public class PlanSeeder {
         List<Plan> plans = new ArrayList<>();
 
         plans.add(new Plan(
-                1,
+                101,
                 "Basic Saver",
                 199.0,
                 2.0,  // Data Allowance (GB)
@@ -30,7 +30,7 @@ public class PlanSeeder {
         ));
 
         plans.add(new Plan(
-                2,
+                102,
                 "Family Connect",
                 499.0,
                 10.0,
@@ -49,7 +49,7 @@ public class PlanSeeder {
         ));
 
         plans.add(new Plan(
-                3,
+                103,
                 "Premium Unlimited",
                 999.0,
                 50.0,

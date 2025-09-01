@@ -7,26 +7,30 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class UsageDAOImpl implements UsageDAO{
 
     private List<Usage> usageRecords;
 
-    public void UsageDAO(){
+    public UsageDAOImpl(){
         this.usageRecords= UsageSeeder.seedUsage();
     }
     @Override
-    public Usage getUsageByCustomerId(int customerId) {
-        Stream<Usage> filteredRecords = usageRecords.stream()
-                .filter(u -> u.getCustomerID() == customerId);
+    public List<Usage> getUsageByCustomerId(int customerId) {
+        List<Usage> filtered = usageRecords.stream()
+                .filter(u -> u.getCustomerID() == customerId)
+                .collect(Collectors.toList());
+        return filtered;
 
-        return (Usage) filteredRecords;
     }
 
     @Override
     public List<Usage> getAllUsages() {
-        return new ArrayList<>(usageRecords);
+        List<Usage> filter = usageRecords.stream().toList();
+        return filter;
+
     }
 
     @Override
