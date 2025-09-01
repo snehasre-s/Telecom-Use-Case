@@ -13,7 +13,7 @@ public class SubscriptionDAOImpl implements SubscriptionDAO {
 
     @Override
     public void addSubscription(Subscription subscription) {
-        subscription.setSubscriptionId(++lastId); // auto-generate ID
+        subscription.setSubscriptionId(++lastId);
         subscriptions.add(subscription);
     }
 
