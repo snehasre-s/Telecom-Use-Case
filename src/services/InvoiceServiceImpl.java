@@ -4,9 +4,11 @@ import dao.InvoiceDAO;
 import dao.InvoiceDAOImpl;
 import model.Invoice;
 
+import java.util.List;
+
 public class InvoiceServiceImpl implements InvoiceService{
     @Override
-    public Invoice displayInvoice(int customerId) {
+    public List<Invoice> displayInvoice(int customerId) {
         InvoiceDAO invoiceDAOObj = new InvoiceDAOImpl();
         try{
             return invoiceDAOObj.displayInvoice(customerId);
@@ -15,5 +17,11 @@ public class InvoiceServiceImpl implements InvoiceService{
             System.out.println(e.getMessage());
             return null;
         }
+    }
+
+    @Override
+    public Invoice generateNewInvoice(int customerId) {
+        InvoiceDAO invoiceDAOObj = new InvoiceDAOImpl();
+        return invoiceDAOObj.generateNewInvoice(customerId);
     }
 }

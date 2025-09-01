@@ -14,7 +14,15 @@ import java.util.stream.Collectors;
 public class InvoiceDAOImpl implements InvoiceDAO {
 
     @Override
-    public Invoice displayInvoice(int customerId) {
+    public List<Invoice> displayInvoice(int customerId) {
+        List<Invoice> allInvoice = Invoices.getInvoices().stream().filter(i->i.getCustomerId()==customerId).toList();
+        System.out.println("All invoices : ");
+        allInvoice.forEach(System.out::println);
+        return allInvoice;
+    }
+
+    @Override
+    public Invoice generateNewInvoice(int customerId) {
         List<Customer> customers = CustomerSeeder.seedCustomers();
         List<Plan> plans = PlanSeeder.seedPlans();
         List<Subscription> subs = SubscriptionSeeder.seedSubscriptions();
