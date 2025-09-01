@@ -23,16 +23,8 @@ public class Main {
         List<Customer> customers = CustomerSeeder.seedCustomers();
         List<Admin> admins = AdminSeeder.seedAdmins();
 
-
-        CustomerService customerService = new CustomerServiceImpl();
-        PlanService planService = new PlanServiceImpl();
-        SubscriptionService subscriptionService = new SubscriptionServiceImpl();
-        UsageService usageService = new UsageServiceImpl();
-        InvoiceService invoiceService = new InvoiceServiceImpl();
-        AnalyticsService analyticsService = new AnalyticsServiceImpl();
-
         System.out.println("==== Welcome ====");
-        System.out.print("Enter phone: ");
+        System.out.print("Enter phone/email: ");
         String username = scanner.nextLine();
 
         System.out.print("Enter password: ");
@@ -45,19 +37,19 @@ public class Main {
 
         if (adminMatch != null) {
             System.out.println("Logged in as ADMIN");
-            showAdminMenu(scanner, customerService, planService, subscriptionService, analyticsService, usageService);
+            showAdminMenu();
             return;
         }
 
         Customer customerMatch = customers.stream()
-                .filter(c -> (c.getPhone().equals(username) || c.getPhone().equals(username))
+                .filter(c -> (c.getPhone().equals(username) || c.getEmail().equals(username))
                         && c.getPassword().equals(password))
                 .findFirst()
                 .orElse(null);
 
         if (customerMatch != null) {
             System.out.println("Logged in as CUSTOMER: " + customerMatch.getName());
-            showCustomerMenu(scanner, customerMatch, customerService, invoiceService, usageService, subscriptionService, planService);
+            showCustomerMenu(customerMatch);
             return;
         }
 
@@ -65,7 +57,12 @@ public class Main {
         System.out.println("Invalid credentials. Login failed!");
     }
 
-    private static void showAdminMenu(Scanner scanner, CustomerService cs, PlanService ps, SubscriptionService ss, AnalyticsService as, UsageService us) {
+    private static void showAdminMenu() {
+        Scanner scanner = new Scanner(System.in);
+        CustomerService cs = new CustomerServiceImpl();
+        PlanService ps = new PlanServiceImpl();
+        SubscriptionService ss = new SubscriptionServiceImpl();
+        UsageService us = new UsageServiceImpl();
         while (true) {
             System.out.println("\n--- Admin Menu ---");
             System.out.println("1. View all customers");
@@ -74,10 +71,10 @@ public class Main {
             System.out.println("4. Update plan");
             System.out.println("5. Delete a plan");
             System.out.println("6. Add a customer");
-            System.out.println("7. Get All Usages");
-            System.out.println("8. View All Subscriptions of a Customer");
-            System.out.println("9. View Subscriptions by Family ID");
-            System.out.println("10. Update a Subscription");
+            System.out.println("7. View All Subscriptions of a Customer");
+            System.out.println("8. View Subscriptions by Family ID");
+            System.out.println("9. Update a Subscription");
+            System.out.println("10. Get All Usages");
             System.out.println("11. Analytics Reports");
             System.out.println("12. Exit admin menu");
             System.out.print("Choose an option: ");
@@ -266,7 +263,7 @@ public class Main {
                         break;
 
                     case "11":
-                        analyticsMenu(scanner,as);
+                        analyticsMenu();
                         break;
 
                     case "12":
@@ -282,7 +279,9 @@ public class Main {
             }
         }
     }
-    private static void analyticsMenu(Scanner scanner, AnalyticsService as) {
+    private static void analyticsMenu() {
+        Scanner scanner = new Scanner(System.in);
+        AnalyticsService as = new AnalyticsServiceImpl();
         while (true) {
             System.out.println("\n--- Analytics Reports ---");
             System.out.println("1. Top N Data Users");
@@ -331,7 +330,13 @@ public class Main {
             }
         }
     }
-    private static void showCustomerMenu(Scanner scanner, Customer customerMatch, CustomerService cs, InvoiceService is, UsageService us, SubscriptionService ss, PlanService ps) {
+    private static void showCustomerMenu(Customer customerMatch) {
+        CustomerService cs = new CustomerServiceImpl();
+        PlanService ps = new PlanServiceImpl();
+        SubscriptionService ss = new SubscriptionServiceImpl();
+        UsageService us = new UsageServiceImpl();
+        InvoiceService is = new InvoiceServiceImpl();
+
         while (true) {
             System.out.println("\n--- Customer Menu ---");
             System.out.println("1. Register new customer");
@@ -343,7 +348,7 @@ public class Main {
             System.out.println("7. View all plans");
             System.out.println("8. Exit customer menu");
             System.out.print("Choose an option: ");
-
+            Scanner scanner = new Scanner(System.in);
             String input = scanner.nextLine().trim();
             try {
                 switch (input) {
@@ -403,6 +408,7 @@ public class Main {
                         cs.updateCustomerDetails(customerMatch.getCustomerId(), field, newValue);
                         System.out.println("Details updated successfully.");
                         break;
+
                     case "4":
                         try{
                             List<Usage> u = us.getUsageByCustomerId(customerMatch.getCustomerId());
@@ -420,9 +426,8 @@ public class Main {
                         }
 
                         break;
+
                     case "5":
-
-
                         System.out.print("Enter Customer ID: ");
                         int custId = scanner.nextInt();
 
@@ -472,6 +477,7 @@ public class Main {
                             System.out.println(e.getMessage());
                         }
                         break;
+
                     case "7":
                         List<Plan> plans = ps.viewAllPlans();
                         if (plans.isEmpty()) {
