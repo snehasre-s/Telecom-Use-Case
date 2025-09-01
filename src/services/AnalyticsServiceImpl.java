@@ -91,7 +91,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
                 Invoice latestInvoice = Invoices.getInvoices().stream()
                         .filter(inv -> inv.getCustomerId() == custId)
                         .reduce((first, second) -> second) // get last invoice
-                        .orElse(null);
+                        .orElse(null); // TODO- Should throw exception
 
                 if (latestInvoice == null) continue;
 

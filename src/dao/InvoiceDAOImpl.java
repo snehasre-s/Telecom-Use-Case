@@ -36,7 +36,7 @@ public class InvoiceDAOImpl implements InvoiceDAO {
                 .filter(s -> s.getCustomerId() == customerId)
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Subscription not found for customer " + customerId));
-
+//TODO THROW THE CUSTOM EXCEPTION
         Plan plan = plans.stream()
                 .filter(p -> p.getId() == subscription.getPlanId())
                 .findFirst()

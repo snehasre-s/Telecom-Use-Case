@@ -15,7 +15,8 @@ public class InvoiceServiceImpl implements InvoiceService{
         }
         catch(RuntimeException e){
             System.out.println(e.getMessage());
-            return null;
+            return null; //TODO DO NOT RETURN NULL ONLY RETURN EMPTY OBJECT
+            //TODO ALSO RETURN OPTIONAL
         }
     }
 
