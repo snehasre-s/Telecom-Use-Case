@@ -3,6 +3,9 @@ package services;
 import model.Invoice;
 import model.Subscription;
 
+import java.util.List;
+
 public interface InvoiceService {
-    Invoice displayInvoice(int customerId);
+    List<Invoice> displayInvoice(int customerId);
+    Invoice generateNewInvoice(int customerId);
 }
