@@ -12,7 +12,7 @@ public interface CustomerService {
 
     List<Customer> listAllCustomers();
 
-    Invoice displayInvoice(int customerId);
+    List<Invoice> displayInvoice(int customerId);
 
     void addUsage(int customerId, double data, int voice, int sms);
 

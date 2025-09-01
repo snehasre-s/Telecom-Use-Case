@@ -32,7 +32,7 @@ public class CustomerServiceImpl implements CustomerService{
     }
 
     @Override
-    public Invoice displayInvoice(int customerId) {
+    public List<Invoice> displayInvoice(int customerId) {
         return customerDAO.displayInvoice(customerId);
     }
 
