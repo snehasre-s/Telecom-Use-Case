@@ -52,7 +52,7 @@ public class InvoiceDAOImpl implements InvoiceDAO {
 
     private Invoice generateIndividualInvoice(Customer c, Subscription s, Plan p, List<Usage> allUsages) {
         List<Usage> custUsage = allUsages.stream()
-                .filter(u -> u.getSubscriptionId() == s.getCustomerId())
+                .filter(u -> u.getSubscriptionID() == s.getCustomerId())
                 .collect(Collectors.toList());
 
         double baseRental = p.getMonthlyRental();
@@ -91,7 +91,7 @@ public class InvoiceDAOImpl implements InvoiceDAO {
         int totalSmsAllowance = plan.getSmsAllowance();
 
         List<Usage> familyUsages = allUsages.stream()
-                .filter(u -> familySubs.stream().anyMatch(s -> s.getCustomerId() == u.getSubscriptionId()))
+                .filter(u -> familySubs.stream().anyMatch(s -> s.getCustomerId() == u.getSubscriptionID()))
                 .collect(Collectors.toList());
 
         double familyUsedData = familyUsages.stream().mapToDouble(Usage::getDataGb).sum();
@@ -112,7 +112,7 @@ public class InvoiceDAOImpl implements InvoiceDAO {
                     .orElseThrow();
 
             List<Usage> memberUsage = familyUsages.stream()
-                    .filter(u -> u.getSubscriptionId() == sub.getSubscriptionId())
+                    .filter(u -> u.getSubscriptionID() == sub.getSubscriptionId())
                     .collect(Collectors.toList());
 
             double memberData = memberUsage.stream().mapToDouble(Usage::getDataGb).sum();

@@ -3,7 +3,8 @@ package model;
 import java.time.LocalDateTime;
 
 public class Usage {
-    private int subscriptionId;
+    int customerID;
+    int subscriptionID;
     private double dataGb;
     private int voiceMinutes;
     private int smsCount;
@@ -14,8 +15,9 @@ public class Usage {
     public Usage() {
     }
 
-    public Usage(int subscriptionId, double dataGb, int voiceMinutes, int smsCount, boolean roaming, boolean international, LocalDateTime usageTime) {
-        this.subscriptionId = subscriptionId;
+    public Usage(int customerID,int subscriptionID,double dataGb, int voiceMinutes, int smsCount, boolean roaming, boolean international, LocalDateTime usageTime) {
+        this.customerID=customerID;
+        this.subscriptionID=subscriptionID;
         this.dataGb = dataGb;
         this.voiceMinutes = voiceMinutes;
         this.smsCount = smsCount;
@@ -24,12 +26,20 @@ public class Usage {
         this.usageTime = usageTime;
     }
 
-    public int getSubscriptionId() {
-        return subscriptionId;
+    public int getCustomerID() {
+        return customerID;
     }
 
-    public void setSubscriptionId(int subscriptionId) {
-        this.subscriptionId = subscriptionId;
+    public void setCustomerID(int customerID) {
+        this.customerID = customerID;
+    }
+
+    public int getSubscriptionID() {
+        return subscriptionID;
+    }
+
+    public void setSubscriptionID(int subscriptionID) {
+        this.subscriptionID = subscriptionID;
     }
 
     public double getDataGb() {
@@ -83,7 +93,8 @@ public class Usage {
     @Override
     public String toString() {
         return "Usage{" +
-                "subscriptionId=" + subscriptionId +
+                "customerID=" + customerID +
+                ", subscriptionID=" + subscriptionID +
                 ", dataGb=" + dataGb +
                 ", voiceMinutes=" + voiceMinutes +
                 ", smsCount=" + smsCount +
@@ -92,6 +103,8 @@ public class Usage {
                 ", usageTime=" + usageTime +
                 '}';
     }
+
+
 
     public boolean isNightTime(){
         int hour= usageTime.getHour();

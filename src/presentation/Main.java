@@ -6,6 +6,10 @@ import repo.AdminSeeder;
 import repo.CustomerSeeder;
 import services.*;
 
+import java.sql.SQLOutput;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Scanner;
 
@@ -406,11 +410,16 @@ public class Main {
                         }
                         break;
                     case "5":
+
+
                         System.out.print("Enter Customer ID: ");
                         int custId = scanner.nextInt();
 
+                        System.out.println("Enter Subscription ID:");
+                        int subscriptionID=scanner.nextInt();
+
                         System.out.print("Enter Data used (GB): ");
-                        double data = scanner.nextDouble();
+                        int data = scanner.nextInt();
 
                         System.out.print("Enter Voice Minutes used: ");
                         int voice = scanner.nextInt();
@@ -418,8 +427,28 @@ public class Main {
                         System.out.print("Enter SMS count: ");
                         int sms = scanner.nextInt();
 
+                        System.out.println("Roaming?(True/False)");
+                        boolean roaming=scanner.nextBoolean();
+
+                        System.out.println("International?(True/False)");
+                        boolean international = scanner.nextBoolean();
+
+                        System.out.println("Enter usageTime");
+                        scanner.nextLine();
+                        System.out.print("Enter date (yyyy-MM-dd): ");
+                        String dateInput = scanner.nextLine();
+                        LocalDate date = LocalDate.parse(dateInput);
+
+                        System.out.print("Enter time (HH:mm:ss): ");
+                        String timeInput = scanner.nextLine();
+                        LocalTime time = LocalTime.parse(timeInput);
+                        LocalDateTime usageTime = LocalDateTime.of(date, time);
+
+
+
+
                         try {
-                            cs.addUsage(custId, data, voice, sms);
+                            us.addUsage(custId,subscriptionID,data, voice, sms,roaming,international,usageTime);
                             System.out.println("Usage added for Customer ID " + custId);
                         } catch (Exception e) {
                             System.out.println("Error while adding usage: " + e.getMessage());

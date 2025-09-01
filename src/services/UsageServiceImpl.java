@@ -20,7 +20,7 @@ public class UsageServiceImpl implements UsageService{
     }
 
     @Override
-    public String addUsage(int subscriptionId, double dataGb, int voiceMinutes, int smsCount, boolean roaming, boolean international, LocalDateTime usageTime) {
-        return usageDAO.addUsage(subscriptionId,dataGb,voiceMinutes,smsCount,roaming,international,usageTime);
+    public String addUsage(int customerID,int subscriptionID,double dataGb, int voiceMinutes, int smsCount, boolean roaming, boolean international, LocalDateTime usageTime) {
+        return usageDAO.addUsage(customerID,subscriptionID,dataGb,voiceMinutes,smsCount,roaming,international,usageTime);
     }
 }

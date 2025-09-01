@@ -19,7 +19,7 @@ public class UsageDAOImpl implements UsageDAO{
     @Override
     public Usage getUsageByCustomerId(int customerId) {
         Stream<Usage> filteredRecords = usageRecords.stream()
-                .filter(u -> u.getSubscriptionId() == customerId);
+                .filter(u -> u.getCustomerID() == customerId);
 
         return (Usage) filteredRecords;
     }
@@ -30,8 +30,9 @@ public class UsageDAOImpl implements UsageDAO{
     }
 
     @Override
-    public String addUsage(int subscriptionId, double dataGb,int voiceMinutes,int smsCount,boolean roaming, boolean international,LocalDateTime usageTime) {
-        usageRecords.add(new Usage(subscriptionId,dataGb,voiceMinutes,smsCount,roaming,international,usageTime));
+    public String addUsage(int customerID,int subscriptionID,double dataGb,int voiceMinutes,int smsCount,boolean roaming, boolean international,LocalDateTime usageTime) {
+        usageRecords.add(new Usage(customerID,subscriptionID,
+                dataGb,voiceMinutes,smsCount,roaming,international,usageTime));
         return "Added Successfully";
 
 

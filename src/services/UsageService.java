@@ -10,5 +10,5 @@ public interface UsageService {
 
     List<Usage> getAllUsages();
 
-    String addUsage(int subscriptionId, double dataGb, int voiceMinutes, int smsCount, boolean roaming, boolean international, LocalDateTime usageTime);
+    String addUsage(int customerID , int subscriptionID,double dataGb, int voiceMinutes, int smsCount, boolean roaming, boolean international, LocalDateTime usageTime);
 }
