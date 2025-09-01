@@ -4,13 +4,9 @@ import exceptions.SubscriptionNotFoundException;
 import model.*;
 import repo.AdminSeeder;
 import repo.CustomerSeeder;
-import repo.Invoices;
 import services.*;
 
-import java.sql.SQLOutput;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
@@ -341,13 +337,13 @@ public class Main {
         while (true) {
             System.out.println("\n--- Customer Menu ---");
             System.out.println("1. Register new customer");
-            System.out.println("2. View your invoice");
+            System.out.println("2. View your current invoice");
             System.out.println("3. Update your details");
             System.out.println("4. View your usage");
             System.out.println("5. Add usage");
             System.out.println("6. View your subscriptions");
             System.out.println("7. View all plans");
-            System.out.println("8. Generate a Invoice");
+            System.out.println("8. Generate Invoice history");
             System.out.println("9. Exit customer menu");
             System.out.print("Choose an option: ");
             Scanner scanner = new Scanner(System.in);
@@ -450,12 +446,12 @@ public class Main {
                         System.out.println("International?(True/False)");
                         boolean international = scanner.nextBoolean();
                         scanner.nextLine();
-                        System.out.println("Enter usageTime");
+
                         LocalDateTime dateTime = null;
                         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
                         while (dateTime == null) {
                             try {
-                                System.out.print("Enter date and time (yyyy-MM-dd HH:mm): ");
+                                System.out.print("Enter usageTime (yyyy-MM-dd HH:mm): ");
                                 String in = scanner.nextLine();
                                 dateTime = LocalDateTime.parse(in, formatter);
                             } catch (DateTimeParseException e) {
@@ -487,6 +483,7 @@ public class Main {
                             plans.forEach(System.out::println);
                         }
                         break;
+
                     case "8":
                         System.out.println("Generating your invoice");
                         InvoiceService invoiceServiceObj = new InvoiceServiceImpl();
