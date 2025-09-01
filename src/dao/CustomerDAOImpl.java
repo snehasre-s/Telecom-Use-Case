@@ -27,7 +27,7 @@ public class CustomerDAOImpl implements CustomerDAO {
     }
 
     @Override
-    public Invoice displayInvoice(int customerId) {
+    public List<Invoice> displayInvoice(int customerId) {
         InvoiceDAO invoiceDAO = new InvoiceDAOImpl();
         return invoiceDAO.displayInvoice(customerId);
     }
